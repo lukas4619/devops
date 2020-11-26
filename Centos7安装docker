@@ -1,0 +1,72 @@
+1.查看内核版本 <Docker 要求 CentOS 系统的内核版本高于 3.10>
+uname -r         
+
+2.把yum包更新到最新
+yum update
+
+3.安装需要的软件包, yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的
+yum install -y yum-utils device-mapper-persistent-data lvm2
+
+4.设置yum源
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+5.查看仓库中docker版本 
+yum list docker-ce --showduplicates | sort -r
+
+6. 安装docker
+yum install docker-ce
+
+7.启动Docker,设置开机启动
+systemctl start docker
+systemctl enable docker
+
+   
+8.常用命令
+   查看版本：
+docker -v
+
+   查看运行状态：
+service docker status
+
+   启动：
+service docker start
+
+   停止：
+service docker stop
+
+   重启：
+service docker restart
+
+   概要信息：
+docker info
+
+    修改docker仓库
+#修改daemon.json配置，如果没有该配置文件需要创建
+cd /etc/docker/
+touch daemon.json
+vi daemon.json
+{
+  "registry-mirrors": ["https://ivh2n9ip.mirror.aliyuncs.com","https://hub-mirror.c.163.com","https://reg-mirror.qiniu.com"]
+}
+service docker restart
+
+  重启服务
+service docker restart
+
+  查看docker容器
+docker ps --查看当前容器
+docker ps -a  --查看历史运行容器
+docker start 容器ID --启动历史运行容器
+
+卸载Docker
+ 1.查询安装过的包
+yum list installed | grep docker
+
+   本机安装过旧版本
+docker.x86_64,docker-client.x86_64,docker-common.x86_64 
+
+ 2.删除安装的软件包
+yum -y remove docker.x86_64                        
+yum -y remove docker-client.x86_64                  
+yum -y remove docker-common.x86_64
+
